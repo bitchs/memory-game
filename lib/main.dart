@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          //primarySwatch: Color.fromRGBO(30, 40, 50, 1),
+          ),
       home: MyHomePage(),
     );
   }
@@ -33,51 +33,57 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<SecuencyBloc>(builder: (context) => SecuencyBloc())
-      ],
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text("holass"),
-          ),
-          body: Column(
-            children: <Widget>[
-              BoardGame(),
-              ButtonNewGame(),
+        providers: [
+          BlocProvider<SecuencyBloc>(builder: (context) => SecuencyBloc())
+        ],
+        child:
+            BlocBuilder<SecuencyBloc, SecuencyState>(builder: (context, state) {
+          return Scaffold(
+            persistentFooterButtons: <Widget>[
+              Container(
+                width: 1000,
+                margin: EdgeInsets.only(bottom: 100),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  // scrollDirection: Axis.horizontal,
+                  children: List.generate(
+                    (state.humanTurn) ? 1 : 3,
+                    (i) => FloatingActionButton(
+                      onPressed: () => (!state.humanTurn)
+                          ? BlocProvider.of<SecuencyBloc>(context).add(
+                              NewGame(),
+                            )
+                          : "",
+                    ),
+                  ),
+                ),
+              )
             ],
-          )),
-    );
+            backgroundColor: Colors.white10,
+            body: Center(child: BoardGame()),
+          );
+        }));
   }
 }
 
 class BoardGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SecuencyBloc, SecuencyState>(
-      builder: (context, state) {
-        return Flexible(
-          child: GridView.count(
-            shrinkWrap: true,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            crossAxisCount: 2,
-            children: List<Widget>.generate(
-                4, (index) => Button(buttonsMap: buttons, i: index, state:state)),
-          ),
-        );
-      }
-    );
-  }
-}
-
-class ButtonNewGame extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      child: Text("nuevo juego"),
-      onPressed: () => BlocProvider.of<SecuencyBloc>(context).add(
-        NewGame(),
-      ),
-    );
+    return BlocBuilder<SecuencyBloc, SecuencyState>(builder: (context, state) {
+      return GridView.count(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 170),
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        crossAxisCount: 2,
+        children: List<Widget>.generate(
+            4,
+            (index) => Button(
+                  buttonsMap: buttons,
+                  i: index,
+                  state: state,
+                )),
+      );
+    });
   }
 }
 
@@ -89,35 +95,41 @@ class Button extends StatelessWidget {
   Button({this.buttonsMap, this.i, this.state});
 
   Widget build(BuildContext context) {
-    print(state.gameList);
+    //print(state.gameList);
     final buttonInfo = buttonsMap["${buttonsMap.keys.toList()[i]}"];
     return RaisedButton(
-      onPressed: () => BlocProvider.of<SecuencyBloc>(context)
-          .add(IncrementSecuency(presedNumber: i)),
-      color: buttonInfo["color"],
+      elevation: 0,
+      onPressed: () => (state.humanTurn)
+          ? BlocProvider.of<SecuencyBloc>(context)
+              .add(IncrementSecuency(presedNumber: i))
+          : null,
+      color: (!state.gameTurn[i])
+          ? buttonInfo["color"]
+          : buttonInfo["colorActivo"],
     );
   }
 }
 
+final Color color = Colors.transparent;
 final Map<String, dynamic> buttons = {
   "blue": {
     "color": Colors.blue,
-    "colorActivo": Colors.blue[300],
+    "colorActivo": color,
     "numero": 0,
   },
   "red": {
     "color": Colors.red,
-    "colorActivo": Colors.red[300],
+    "colorActivo": color,
     "numero": 1,
   },
   "green": {
     "color": Colors.green,
-    "colorActivo": Colors.green[300],
+    "colorActivo": color,
     "numero": 2,
   },
   "yellow": {
     "color": Colors.yellow,
-    "colorActivo": Colors.yellow[300],
+    "colorActivo": color,
     "numero": 3,
   },
 };

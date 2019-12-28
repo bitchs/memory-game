@@ -11,7 +11,7 @@ abstract class SecuencyEvent extends Equatable {
 
 class NewGame extends SecuencyEvent {}
 
-class SwitchEvent extends SecuencyEvent{}
+class ActiveButton extends SecuencyEvent{}
 
 class IncrementSecuency extends SecuencyEvent {
   final int presedNumber;
