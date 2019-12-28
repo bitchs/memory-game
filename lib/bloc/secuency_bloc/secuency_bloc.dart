@@ -11,6 +11,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
   @override
   SecuencyState get initialState => SecuencyState.initial();
 
+
   @override
   Stream<SecuencyState> mapEventToState(SecuencyEvent event) async* {
     if (event is NewGame) {
@@ -24,7 +25,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
     if (state.humanTurn) {
       state.humanList.add(event.presedNumber);
       if (event.presedNumber == state.gameList[state.secuencyCount]) {
-        print("bien");
+       
         yield SecuencyState(
           gameList: state.gameList,
           humanList: state.humanList,
@@ -32,23 +33,17 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
               (state.humanList.length == state.gameList.length) ? false : true,
           gameTurn: state.gameTurn + 1,
           secuencyCount: state.secuencyCount + 1,
-          red: true,
-          yellow: true,
-          blue: true,
-          green: true,
+       
         );
       } else {
-        print("lose");
+       
         yield SecuencyState(
           gameList: [],
           humanList: [],
           humanTurn: false,
           gameTurn: state.gameTurn + 1,
           secuencyCount: 0,
-          red: true,
-          yellow: true,
-          blue: true,
-          green: true,
+       
         );
       }
     }
@@ -61,7 +56,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
       //agregar numero al estado lista
       state.gameList.add(nextNumber);
 
-      print(state.gameList);
+      
 
       //cambiar el estado de cada cuadro a pulsado duracion variable
       for (var item in state.gameList) {
@@ -72,11 +67,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
               humanList: [],
               humanTurn: true,
               gameTurn: state.gameTurn,
-              secuencyCount: 0,
-              red: false,
-              yellow: true,
-              blue: true,
-              green: true,
+              secuencyCount: state.gameList[state.secuencyCount],
             );
             break;
           case 1:
@@ -86,10 +77,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
               humanTurn: true,
               gameTurn: state.gameTurn,
               secuencyCount: 0,
-              red: true,
-              yellow: false,
-              blue: true,
-              green: true,
+     
             );
             break;
           case 2:
@@ -99,10 +87,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
               humanTurn: true,
               gameTurn: state.gameTurn,
               secuencyCount: 0,
-              red: true,
-              yellow: true,
-              blue: false,
-              green: true,
+   
             );
             break;
           case 3:
@@ -112,10 +97,7 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
               humanTurn: true,
               gameTurn: state.gameTurn,
               secuencyCount: 0,
-              red: true,
-              yellow: true,
-              blue: true,
-              green: false,
+         
             );
             break;
           default:

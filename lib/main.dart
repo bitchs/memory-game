@@ -53,19 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
 class BoardGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: GridView.count(
-        shrinkWrap: true,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        crossAxisCount: 2,
-        children: <Widget>[
-          RedButton(),
-          GreenButton(),
-          BlueButton(),
-          YellowButton(),
-        ],
-      ),
+    return BlocBuilder<SecuencyBloc, SecuencyState>(
+      builder: (context, state) {
+        return Flexible(
+          child: GridView.count(
+            shrinkWrap: true,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            crossAxisCount: 2,
+            children: List<Widget>.generate(
+                4, (index) => Button(buttonsMap: buttons, i: index, state:state)),
+          ),
+        );
+      }
     );
   }
 }
@@ -80,89 +80,44 @@ class ButtonNewGame extends StatelessWidget {
     );
   }
 }
-/*
-abstract class ButtonsGame{
-  final Color color;
 
-  ButtonsGame(this.color);
-  }
+class Button extends StatelessWidget {
+  final Map<String, dynamic> buttonsMap;
+  final int i;
+  final state;
 
-class ReedButton{
-  final list = "string";
-  
-  
-}
-*/
-class RedButton extends StatelessWidget {
-
-  final Color red = Colors.red;
-  final Color redligth = Colors.red[300];
-  final int numero = 0;
+  Button({this.buttonsMap, this.i, this.state});
 
   Widget build(BuildContext context) {
-    return BlocBuilder<SecuencyBloc, SecuencyState>(
-      builder: (context, state) {
-        return RaisedButton(
-            onPressed: () => BlocProvider.of<SecuencyBloc>(context)
-                .add(IncrementSecuency(presedNumber: this.numero)),
-            color: (state.red) ? red : redligth);
-      },
+    print(state.gameList);
+    final buttonInfo = buttonsMap["${buttonsMap.keys.toList()[i]}"];
+    return RaisedButton(
+      onPressed: () => BlocProvider.of<SecuencyBloc>(context)
+          .add(IncrementSecuency(presedNumber: i)),
+      color: buttonInfo["color"],
     );
   }
 }
 
-class GreenButton extends StatelessWidget {
-
-  final Color green = Colors.green;
-  final Color greenligth = Colors.green[300];
-  final int numero = 1;
-
-  Widget build(BuildContext context) {
-    return BlocBuilder<SecuencyBloc, SecuencyState>(
-      builder: (context, state) {
-        return RaisedButton(
-            onPressed: () => BlocProvider.of<SecuencyBloc>(context)
-                .add(IncrementSecuency(presedNumber: this.numero)),
-            color: (state.green) ? green : greenligth);
-      },
-    );
-  }
-}
-
-class BlueButton extends StatelessWidget {
-
-  final Color blue = Colors.blue;
-  final Color blueligth = Colors.blue[300];
-  final int numero = 2;
-
-  Widget build(BuildContext context) {
-    return BlocBuilder<SecuencyBloc, SecuencyState>(
-      builder: (context, state) {
-        return RaisedButton(
-            onPressed: () => BlocProvider.of<SecuencyBloc>(context)
-                .add(IncrementSecuency(presedNumber: this.numero)),
-            color: (state.blue) ? blue : blueligth);
-      },
-    );
-  }
-}
-
-
-
-class YellowButton extends StatelessWidget {
-
-  final Color yellow = Colors.yellow;
-  final Color yellowligth = Colors.yellow[300];
-  final int numero = 3;
-
-  Widget build(BuildContext context) {
-    return BlocBuilder<SecuencyBloc, SecuencyState>(
-      builder: (context, state) {
-        return RaisedButton(
-            onPressed: () => BlocProvider.of<SecuencyBloc>(context)
-                .add(IncrementSecuency(presedNumber: this.numero)),
-            color: (state.yellow) ? yellow : yellowligth);
-      },
-    );
-  }
-}
+final Map<String, dynamic> buttons = {
+  "blue": {
+    "color": Colors.blue,
+    "colorActivo": Colors.blue[300],
+    "numero": 0,
+  },
+  "red": {
+    "color": Colors.red,
+    "colorActivo": Colors.red[300],
+    "numero": 1,
+  },
+  "green": {
+    "color": Colors.green,
+    "colorActivo": Colors.green[300],
+    "numero": 2,
+  },
+  "yellow": {
+    "color": Colors.yellow,
+    "colorActivo": Colors.yellow[300],
+    "numero": 3,
+  },
+};
