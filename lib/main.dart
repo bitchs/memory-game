@@ -47,14 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   // scrollDirection: Axis.horizontal,
                   children: List.generate(
-                    (state.humanTurn) ? 1 : 3,
+                    (state.humanTurn) ? 0 : 1,
                     (i) => FloatingActionButton(
-                      onPressed: () => (!state.humanTurn)
-                          ? BlocProvider.of<SecuencyBloc>(context).add(
+                      child: Text("${state.gameList.length + 1 }"),
+                        onPressed: () =>
+                            BlocProvider.of<SecuencyBloc>(context).add(
                               NewGame(),
-                            )
-                          : "",
-                    ),
+                            )),
                   ),
                 ),
               )

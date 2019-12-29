@@ -57,40 +57,22 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
       
       for (var i = 0; i < state.gameList.length; i++) {
        
-        await Future.delayed(Duration(milliseconds: 1000));
-        
-        state.gameTurn[0] = false;
-        state.gameTurn[1] = false;
-        state.gameTurn[2] = false;
-        state.gameTurn[3] = false;
+        await Future.delayed(Duration(milliseconds: 700));
+      
         state.gameTurn[state.gameList[i]] = true;
-        print(state.gameList);
-        print(state.gameTurn[state.gameList[i]]);
-
+        
         if (i == state.gameList.length - 1) {
-          yield SecuencyState(
-            gameList: state.gameList,
-            humanList: state.humanList,
-            humanTurn: false,
-            gameTurn: state.gameTurn,
-            secuencyCount: 1,
-          );
+
+          yield SecuencyState().turnOn(this.state ,humanTurn: false, secuencyCount: 1);
+         
           await Future.delayed(Duration(milliseconds: 550));
-          yield SecuencyState(
-            gameList: state.gameList,
-            humanList: state.humanList,
-            humanTurn: true,
-            gameTurn: [false, false, false, false],
-            secuencyCount: 0,
-          );
+          
+          yield SecuencyState.turnOff(state);
+
+          
         } else {
-          yield SecuencyState(
-            gameList: state.gameList,
-            humanList: state.humanList,
-            humanTurn: false,
-            gameTurn: state.gameTurn,
-            secuencyCount: i,
-          );
+          yield SecuencyState.setState(state:state, secuencyCount: i);
+         
           await Future.delayed(Duration(milliseconds: 550));
           yield SecuencyState(
             gameList: state.gameList,
