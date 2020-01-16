@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:martin_dice/bloc/secuency_bloc/secuency_bloc.dart';
+import 'package:memory_game/bloc/secuency_bloc/secuency_bloc.dart';
 import 'package:meta/meta.dart';
 
 abstract class SecuencyEvent extends Equatable {

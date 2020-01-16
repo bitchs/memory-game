@@ -1,4 +1,4 @@
-# martin_dice
+# Memory game
 
 A new Flutter project.
 

@@ -1,4 +1,4 @@
-package com.example.martin_dice
+package com.example.memory_game
 
 import android.os.Bundle
 
