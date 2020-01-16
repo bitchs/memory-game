@@ -1,80 +1,71 @@
+
+import 'dart:math';
+
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-enum Turno{
-  player,
-  computer
-}
+enum Turno { player, computer }
 
 abstract class Turn extends Equatable {
-  
   const Turn();
   @override
   List<Object> get props => [];
 }
 
 class SecuencyState extends Turn {
-  final List gameList;
-  final List humanList;
   final bool humanTurn;
+  final List<int> gameList;
   final List<bool> gameTurn;
   final int secuencyCount;
 
   SecuencyState({
-    this.gameList,
-    this.humanList,
     this.humanTurn,
+    this.gameList,
     this.gameTurn,
     this.secuencyCount,
   });
 
   @override
-  List get props => [humanList, gameList, humanTurn, gameTurn, secuencyCount];
+  List get props => [humanTurn, gameList, gameTurn];
 
   factory SecuencyState.initial() {
     return SecuencyState(
-      humanList: [],
-      gameList: [],
       humanTurn: false,
       gameTurn: [false, false, false, false],
+      gameList: [],
       secuencyCount: 0,
     );
   }
 
-  
+  factory SecuencyState.turnOff({@required state, i}) {
+    final List<bool> list = [false, false, false, false];
+    list[i] = true;
+    return SecuencyState(
+      humanTurn: state.humanTurn,
+      gameTurn: list,
+      gameList: state.gameList,
+      secuencyCount: state.secuencyCount,
+    );
+  }
 
   factory SecuencyState.setState(
-      {@required SecuencyState state,
-      List gameList,
-      List humanList,
+      {
+        @required SecuencyState state,
       bool humanTurn,
+      List<int> gameList,
       List<bool> gameTurn,
-      int secuencyCount}) {
+      int secuencyCount, 
+      }) {
     return SecuencyState(
-      humanList: humanList ?? state.humanList,
-      gameList: gameList ?? state.gameList,
       humanTurn: humanTurn ?? state.humanTurn,
       gameTurn: gameTurn ?? state.gameTurn,
+      gameList: gameList ?? state.gameList,
       secuencyCount: secuencyCount ?? state.secuencyCount,
+      
     );
   }
 
-  factory SecuencyState.turnOff(prueba) {
-    return SecuencyState(
-      humanList: prueba.humanList,
-      gameList: prueba.gameList,
-      humanTurn: true,
-      gameTurn: [false, false, false, false],
-      secuencyCount: 0,
-    );
-  }
-  SecuencyState turnOn(prueba, {bool humanTurn, int secuencyCount}) {
-    return SecuencyState(
-      gameList: gameList ?? prueba.gameList,
-      humanList: humanList ?? prueba.humanList,
-      humanTurn: humanTurn ?? prueba.humanTurn,
-      gameTurn: gameTurn ?? prueba.gameTurn,
-      secuencyCount: secuencyCount ?? prueba.secuencyCount,
-    );
+  void addRandomtToList() {
+    gameList.add(Random().nextInt(4));
   }
 }

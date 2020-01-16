@@ -24,21 +24,16 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
 
   Stream<SecuencyState> _mapSecuencyToState(IncrementSecuency event) async* {
     if (state.humanTurn) {
-      state.humanList.add(event.presedNumber);
-
-      ///pregunta si el numero pulsado es igual al numero de la lista de juego
       if (event.presedNumber == state.gameList[state.secuencyCount]) {
-        print("bien");
+      
+       
+            print(state.secuencyCount);
+        yield SecuencyState.setState(
+            state: state, secuencyCount: state.secuencyCount + 1);
 
-        ///si son iguales instancia [SecuencyState]
-        yield SecuencyState(
-          gameList: state.gameList,
-          humanList: state.humanList,
-          humanTurn:
-              (state.secuencyCount + 1 == state.gameList.length) ? false : true,
-          gameTurn: [false, false, false, false],
-          secuencyCount: state.secuencyCount + 1,
-        );
+        if (state.gameList.last == state.gameList[state.secuencyCount]) {
+          yield SecuencyState.setState(state: state, humanTurn: false);
+        }
       } else {
         print("pierdes");
         yield SecuencyState.initial();
@@ -51,38 +46,19 @@ class SecuencyBloc extends Bloc<SecuencyEvent, SecuencyState> {
   Stream<SecuencyState> _mapComputerTurnToState(NewGame event) async* {
     if (!state.humanTurn) {
       // generar un numero random del 1 al 4
-      int nextNumber = Random().nextInt(4);
       //agregar numero al estado lista
-      state.gameList.add(nextNumber);
-      
+      state.addRandomtToList();
+      print(state.gameList);
+
       for (var i = 0; i < state.gameList.length; i++) {
-       
-        await Future.delayed(Duration(milliseconds: 700));
-      
-        state.gameTurn[state.gameList[i]] = true;
-        
-        if (i == state.gameList.length - 1) {
-
-          yield SecuencyState().turnOn(this.state ,humanTurn: false, secuencyCount: 1);
-         
-          await Future.delayed(Duration(milliseconds: 550));
-          
-          yield SecuencyState.turnOff(state);
-
-          
-        } else {
-          yield SecuencyState.setState(state:state, secuencyCount: i);
-         
-          await Future.delayed(Duration(milliseconds: 550));
-          yield SecuencyState(
-            gameList: state.gameList,
-            humanList: state.humanList,
-            humanTurn: false,
-            gameTurn: [false, false, false, false],
-            secuencyCount: 0,
-          );
-        }
+        await Future.delayed(Duration(milliseconds: 400));
+        yield SecuencyState.turnOff(state: this.state, i: state.gameList[i]);
+        await Future.delayed(Duration(milliseconds: 300));
+        yield SecuencyState.setState(
+            state: this.state, gameTurn: initialState.gameTurn);
       }
+      await Future.delayed(Duration(milliseconds: 100));
+      yield SecuencyState.setState(state: state, humanTurn: true);
     }
   }
 }

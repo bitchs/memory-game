@@ -34,10 +34,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider<SecuencyBloc>(builder: (context) => SecuencyBloc())
+          BlocProvider<SecuencyBloc>(create: (context) => SecuencyBloc())
         ],
         child:
             BlocBuilder<SecuencyBloc, SecuencyState>(builder: (context, state) {
+          //print(state.props);
           return Scaffold(
             persistentFooterButtons: <Widget>[
               Container(
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: List.generate(
                     (state.humanTurn) ? 0 : 1,
                     (i) => FloatingActionButton(
-                      child: Text("${state.gameList.length + 1 }"),
+                        child: Text("${state.gameList.length + 1}"),
                         onPressed: () =>
                             BlocProvider.of<SecuencyBloc>(context).add(
                               NewGame(),
